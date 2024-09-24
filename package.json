@@ -1,0 +1,35 @@
+{
+  "name": "Yoshida APIs",
+  "version": "1.0.0",
+  "description": "Simple Rest Api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^18.0.6",
+    "axios": "^1.7.2",
+    "cfonts": "^3.2.0",
+    "chalk": "^4.1.1",
+    "cheerio": "^1.0.0-rc.12",
+    "convert-size": "latest",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^4.19.2",
+    "file-type": "^16.5.3",
+    "form-data": "^4.0.0",
+    "formdata-node": "^6.0.3",
+    "got": "^11.8.6",
+    "human-readable": "^0.2.1",
+    "jsdom": "^20.0.3",
+    "node-fetch": "^2.7.0",
+    "qs": "^6.12.1",
+    "request": "^2.88.2",
+    "spinnies": "^0.5.1",
+    "swagger-themes": "^1.4.3",
+    "swagger-ui-express": "^5.0.0"
+  }
+}
