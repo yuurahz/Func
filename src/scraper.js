@@ -3,9 +3,9 @@ const FormData = require('form-data')
 const parse = require('file-type').fromBuffer
 const cheerio = require('cheerio')
 const Func = new (require('./functions'))
+global.creator = '@Adixshnzz - Func'
 
 module.exports = class Scraper {
-  
    uploader = (i, extension, time = 60) => new Promise(async resolve => {
       try {
          if (!Buffer.isBuffer(i) && !Func.isUrl(i)) return resolve({
