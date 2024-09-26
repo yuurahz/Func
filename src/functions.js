@@ -10,7 +10,7 @@ const { fromBuffer } = require('file-type')
 const { green, blueBright, redBright } = require('chalk')
 const { tmpdir } = require('os')
 const moment = require('moment-timezone')
-moment.tz.setDefault(global.timezone)
+moment.tz.setDefault('Asia/Jakarta')
 const NodeID3 = require('node-id3')
 const {
    read,
