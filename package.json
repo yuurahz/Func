@@ -1,14 +1,14 @@
 {
   "name": "@yuura/Func",
-  "version": "1.4.8",
-  "description": "All class functions for wabot",
+  "version": "1.2.0",
+  "description": "functions for wabot",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "axios":"~0.24.0",
-    "chalk":"~4.1.0",
+    "axios":"^0.24.0",
+    "chalk":"^4.1.0",
     "cheerio": "^1.0.0-rc.12",
     "crypto": "^1.0.1",
     "dotenv": "^16.0.1",
@@ -18,14 +18,14 @@
     "human-readable": "^0.2.1",
     "jimp": "0.16.13",
     "jsdom": "^20.0.3",
-    "mime-types":"~2.1.32",
+    "mime-types":"^2.1.32",
     "node-fetch": "^2.7.0",
     "node-id3": "^0.2.3",
     "os":"^0.1.2",
     "path": "^0.12.7",
     "qs": "^6.12.1",
     "request": "^2.88.2",
-    "syntax-error":"~1.4.0"
+    "syntax-error":"^1.4.0"
   },
    "author": "YuuraHz",
    "licence": "ISC"
