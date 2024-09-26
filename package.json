@@ -18,10 +18,12 @@
     "jimp": "0.16.13",
     "jsdom": "^20.0.3",
     "node-fetch": "^2.7.0",
+    "node-id3": "^0.2.3",
     "path": "^0.12.7",
     "pdfkit": "^0.15.0",
     "qs": "^6.12.1",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "syntax-error":"~1.4.0"
   },
    "author": "YuuraHz",
    "licence": "ISC"
