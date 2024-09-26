@@ -18,21 +18,6 @@ const axios = require('axios'),
   
 module.exports = class Function {
 	
- textToPDFBuffer = (text) => {
-  return new Promise((resolve, reject) => {
-    const buffers = [],
-      streamBuffer = new Writable({
-        write(chunk, encoding, next) {
-          buffers.push(chunk), next();
-        }
-      }),
-      doc = new PDFDocument()
-    doc.pipe(streamBuffer), doc.text(text), doc.end(), streamBuffer.on("finish", () => {
-      const pdfBuffer = Buffer.concat(buffers)
-      resolve(pdfBuffer)
-    }), streamBuffer.on("error", reject)
-  })
-  }
   
  createSticker = (img, url, packName, authorName, quality) => {
     try {
