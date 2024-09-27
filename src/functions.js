@@ -1,5 +1,6 @@
 const axios = require('axios')
 const fetch = require('node-fetch')
+const crypto = require('crypto')
 const cheerio = require('cheerio')
 const fs = require('fs')
 const mime = require('mime-types')
@@ -20,6 +21,125 @@ const {
 } = require('jimp')
 
 module.exports = class Function {
+
+randomarray = async (array) => {
+   return array[Math.floor(Math.random() * array.length)]
+   }
+
+  generateSerpApiUrl = (data) => {
+  const params = new URLSearchParams(data)
+  const url = `https://serpapi.com/search.json?${params.toString()}`
+  try {
+    const response = fetch(url)
+    if (!response.ok) {
+      throw new Error("Request failed")
+    }
+    const result = response.json()
+    return result
+   } catch (error) {
+    throw new Error(`Failed to fetch data: ${error.message}`)
+   }
+  }
+   
+  generateRandomString = (length) => {
+    const characters = 'abcdef0123456789'
+    let result = ''
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length))
+    }
+    return result
+    }
+
+  generateRandomNumberString = (length) => {
+    const characters = '0123456789';
+    let result = ''
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length))
+    }
+    return result
+  }
+
+  generateRandomUserAgent = () => {
+  const androidVersions = [
+    "4.0.3",
+    "4.1.1",
+    "4.2.2",
+    "4.3",
+    "4.4",
+    "5.0.2",
+    "5.1",
+    "6.0",
+    "7.0",
+    "8.0",
+    "9.0",
+    "10.0",
+    "11.0",
+  ]
+  const deviceModels = [
+    "M2004J19C",
+    "S2020X3",
+    "Xiaomi4S",
+    "RedmiNote9",
+    "SamsungS21",
+    "GooglePixel5",
+  ]
+  const buildVersions = [
+    "RP1A.200720.011",
+    "RP1A.210505.003",
+    "RP1A.210812.016",
+    "QKQ1.200114.002",
+    "RQ2A.210505.003",
+  ]
+  const selectedModel =
+    deviceModels[Math.floor(Math.random() * deviceModels.length)]
+  const selectedBuild =
+    buildVersions[Math.floor(Math.random() * buildVersions.length)]
+  const chromeVersion =
+    "Chrome/" +
+    (Math.floor(Math.random() * 80) + 1) +
+    "." +
+    (Math.floor(Math.random() * 999) + 1) +
+    "." +
+    (Math.floor(Math.random() * 9999) + 1)
+  const userAgent = `Mozilla/5.0 (Linux; Android ${androidVersions[Math.floor(Math.random() * androidVersions.length)]}; ${selectedModel} Build/${selectedBuild}) AppleWebKit/537.36 (KHTML, like Gecko) ${chromeVersion} Mobile Safari/537.36 WhatsApp/1.${Math.floor(Math.random() * 9) + 1}.${Math.floor(Math.random() * 9) + 1}`
+  return userAgent
+  }
+
+  generateRandomIP = () => {
+  const octet = () => Math.floor(Math.random() * 256)
+  return `${octet()}.${octet()}.${octet()}.${octet()}`
+  }
+
+  generateUUIDv4 = () => {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.randomBytes(1)[0] & 15 >> c / 4).toString(16)
+   )
+  }
+
+  randomBytes = (length) => {
+  return crypto.randomBytes(length)
+  }
+
+  generateMessageID = () => {
+  return Func.randomBytes(10).toString("hex").toUpperCase()
+  }
+   
+  getRandom = (ext) => {
+   return `${Math.floor(Math.random() * 10000)}${ext}`
+   }
+    
+  ebinary = (binary) => {
+    return binary.split(' ')
+      .map(bin => String.fromCharCode(parseInt(bin, 2)))
+     .join('')
+    }
+
+  binary = (text) => {
+    return text.split('')
+     .map(char => char.charCodeAt(0).toString(2).padStart(8, '0'))
+    .join(' ')
+   }
+
    /* Delay
     * @param {Integer} time
     */
@@ -1073,4 +1193,71 @@ module.exports = class Function {
          resolve(ab)
       })
    }
+
+  removeItem = (arr, value) => {
+    let index = arr.indexOf(value)
+    if (index > -1) arr.splice(index, 1)
+    return arr
+  }
+
+  Styles = (text, style = 1) => {
+   const xStr = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0']
+   const yStr = Object.freeze({
+   1: ['ᴀ', 'ʙ', 'ᴄ', 'ᴅ', 'ᴇ', 'ꜰ', 'ɢ', 'ʜ', 'ɪ', 'ᴊ', 'ᴋ', 'ʟ', 'ᴍ', 'ɴ', 'ᴏ', 'ᴘ', 'q', 'ʀ', 'ꜱ', 'ᴛ', 'ᴜ', 'ᴠ', 'ᴡ', 'x', 'ʏ', 'ᴢ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+   2: ['𝑎', '𝑏', '𝑐', '𝑑', '𝑒', '𝑓', '𝑔', 'ℎ', '𝑖', '𝑗', '𝑘', '𝑙', '𝑚', '𝑛', '𝑜', '𝑝', '𝑞', '𝑟', '𝑠', '𝑡', '𝑢', '𝑣', '𝑤', '𝑥', '𝑦', '𝑧', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+   3: ['𝐚', '𝐛', '𝐜', '𝐝', '𝐞', '𝐟', '𝐠', '𝐡', '𝐢', '𝐣', '𝐤', '𝐥', '𝐦', '𝐧', '𝐨', '𝐩', '𝐪', '𝐫', '𝐬', '𝐭', '𝐮', '𝐯', '𝐰', '𝐱', '𝐲', '𝐳', '𝟏', '𝟐', '𝟑', '𝟒', '𝟓', '𝟔', '𝟕', '𝟖', '𝟗', '𝟎'],
+   4: ['𝒂', '𝒃', '𝒄', '𝒅', '𝒆', '𝒇', '𝒈', '𝒉', '𝒊', '𝒋', '𝒌', '𝒍', '𝒎', '𝒏', '𝒐', '𝒑', '𝒒', '𝒓', '𝒔', '𝒕', '𝒖', '𝒗', '𝒘', '𝒙', '𝒚', '𝒛', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+   5: ['𝗮', '𝗯', '𝗰', '𝗱', '𝗲', '𝗳', '𝗴', '𝗵', '𝗶', '𝗷', '𝗸', '𝗹', '𝗺', '𝗻', '𝗼', '𝗽', '𝗾', '𝗿', '𝘀', '𝘁', '𝘂', '𝘃', '𝘄', '𝘅', '𝘆', '𝘇', '𝟭', '𝟮', '𝟯', '𝟰', '𝟱', '𝟲', '𝟳', '𝟴', '𝟵', '𝟬'],
+   6: ['ᵃ', 'ᵇ', 'ᶜ', 'ᵈ', 'ᵉ', 'ᶠ', 'ᵍ', 'ʰ', 'ⁱ', 'ʲ', 'ᵏ', 'ˡ', 'ᵐ', 'ⁿ', 'ᵒ', 'ᵖ', 'ᵠ', 'ʳ', 'ˢ', 'ᵗ', 'ᵘ', 'ᵛ', 'ʷ', 'ˣ', 'ʸ', 'ᶻ', '¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹', '⁰'],
+   7: ['ᗩ', 'ᗷ', 'ᑕ', 'ᗪ', 'ᗴ', 'ᖴ', 'ᘜ', 'ᕼ', 'I', 'ᒍ', 'K', 'ᒪ', 'ᗰ', 'ᑎ', 'O', 'ᑭ', 'ᑫ', 'ᖇ', 'Տ', 'T', 'ᑌ', 'ᐯ', 'ᗯ', '᙭', 'Y', 'ᘔ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+   8: ['𝙖', '𝙗', '𝙘', '𝙙', '𝙚', '𝙛', '𝙜', '𝙝', '𝙞', '𝙟', '𝙠', '𝙡', '𝙢', '𝙣', '𝙤', '𝙥', '𝙦', '𝙧', '𝙨', '𝙩', '𝙪', '𝙫', '𝙬', '𝙭', '𝙮', '𝙯', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+   9: ['𝘢', '𝘣', '𝘤', '𝘥', '𝘦', '𝘧', '𝘨', '𝘩', '𝘪', '𝘫', '𝘬', '𝘭', '𝘮', '𝘯', '𝘰', '𝘱', '𝘲', '𝘳', '𝘴', '𝘵', '𝘶', '𝘷', '𝘸', '𝘹', '𝘺', '𝘻', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+   10: ['𝖺', '𝖻', '𝖼', '𝖽', '𝖾', '𝖿', '𝗀', '𝗁', '𝗂', '𝗃', '𝗄', '𝗅', '𝗆', '𝗇', '𝗈', '𝗉', '𝗊', '𝗋', '𝗌', '𝗍', '𝗎', '𝗏', '𝗐', '𝗑', '𝗒', '𝗓', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+   11: ['Ⓐ︎', 'Ⓑ', '︎Ⓒ', '︎Ⓓ︎', 'Ⓔ︎', 'Ⓕ︎', 'Ⓖ︎', 'Ⓗ︎', 'Ⓘ︎', 'Ⓙ︎', 'Ⓚ︎', 'Ⓛ︎', 'Ⓜ︎', 'Ⓝ︎', 'Ⓞ︎', 'Ⓟ', '︎Ⓠ︎', 'Ⓡ︎', 'Ⓢ', '︎Ⓣ︎', 'Ⓤ︎', 'Ⓥ︎', 'Ⓦ︎', 'Ⓧ︎', 'Ⓨ︎', 'Ⓩ︎', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+   12: ['🅐︎', '🅑︎', '🅒', '︎🅓︎', '🅔︎', '🅕︎', '🅖︎', '🅗', '︎🅘︎', '🅙︎', '🅚', '︎🅛︎', '🅜', '︎🅝︎', '🅞', '︎🅟', '︎🅠︎', '🅡︎', '🅢', '︎🅣', '︎🅤', '︎🅥︎', '🅦︎', '🅧︎', '🅨︎', '🅩︎', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+   13: ['卂', '乃', '匚', 'ᗪ', '乇', '千', 'ᘜ', '卄', '|', 'ﾌ', 'Ҝ', 'ㄥ', '爪', '几', 'ㄖ', '卩', 'Ҩ', '尺', '丂', 'ㄒ', 'ㄩ', 'ᐯ', '山', '乂', 'ㄚ', '乙', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+   14: ['ⓐ', 'ⓑ', 'ⓒ', 'ⓓ', 'ⓔ', 'ⓕ', 'ⓖ', 'ⓗ', 'ⓘ', 'ⓙ', 'ⓚ', 'ⓛ', 'ⓜ', 'ⓝ', 'ⓞ', 'ⓟ', 'ⓠ', 'ⓡ', 'ⓢ', 'ⓣ', 'ⓤ', 'ⓥ', 'ⓦ', 'ⓧ', 'ⓨ', 'ⓩ', '①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⓪'],
+   15: ['𝚊', '𝚋', '𝚌', '𝚍', '𝚎', '𝚏', '𝚐', '𝚑', '𝚒', '𝚓', '𝚔', '𝚕', '𝚖', '𝚗', '𝚘', '𝚙', '𝚚', '𝚛', '𝚜', '𝚝', '𝚞', '𝚟', '𝚠', '𝚡', '𝚢', '𝚣', '𝟷', '𝟸', '𝟹', '𝟺', '𝟻', '𝟼', '𝟽', '𝟾', '𝟿', '𝟶'],
+   16: ['a͢', 'b͢', 'c͢', 'd͢', 'e͢', 'f͢', 'g͢', 'h͢', 'i͢', 'j͢', 'k͢', 'l͢', 'm͢', 'n͢', 'o͢', 'p͢', 'q', '͢r', '͢s͢', 't', '͢u', '͢v͢', 'w͢', 'x͢', 'y', '͢z', '͢1͢', '2͢', '3', '͢4͢', '5͢', '6͢', '7͢', '8͢', '9͢', '0͢'],
+   17: ['𝕒', '𝕓', '𝕔', '𝕕', '𝕖', '𝕗', '𝕘', '𝕙', '𝕚', '𝕛', '𝕜', '𝕝', '𝕞', '𝕟', '𝕠', '𝕡', '𝕢', '𝕣', '𝕤', '𝕥', '𝕦', '𝕧', '𝕨', '𝕩', '𝕪', '𝕫', '𝟙', '𝟚', '𝟛', '𝟜', '𝟝', '𝟞', '𝟟', '𝟠', '𝟡', '𝟘'],
+   18: ['【a】', '【b】', '【c】', '【d】', '【e】', '【f】', '【g】', '【h】', '【i】', '【j】', '【k】', '【l】', '【m】', '【n】', '【o】', '【p】', '【q】', '【r】', '【s】', '【t】', '【u】', '【v】', '【w】', '【x】', '【y】', '【z】', '【1】', '【2】', '【3】', '【4】', '【5】', '【6】', '【7】', '【8】', '【9】', '【0】'],
+   19: ['ａ', 'ｂ', 'ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 'ｋ', 'ｌ', 'ｍ', 'ｎ', 'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｗ', 'ｘ', 'ｙ', 'ｚ', '１', '２', '３', '４', '５', '６', '７', '８', '９', '０'],
+   20: ['『a』', '『b』', '『c』', '『d』', '『e』', '『f』', '『g』', '『h』', '『i』', '『j』', '『k』', '『l』', '『m』', '『n』', '『o』', '『p』', '『q』', '『r』', '『s』', '『t』', '『u』', '『v』', '『w』', '『x』', '『y』', '『z』', '『1』', '『2』', '『3』', '『4』', '『5』', '『6』', '『7』', '『8』', '『9』', '『0』'],
+   })
+  const replacer = []
+  xStr.map((v, i) =>
+    replacer.push({
+      original: v,
+      convert: yStr[style][i]
+    })
+  )
+  const str = text.toLowerCase().split("")
+  const output = []
+  str.map((v) => {
+    const find = replacer.find((x) => x.original == v)
+    find ? output.push(find.convert) : output.push(v)
+  })
+  return output.join("")
+  }
+
+  arrayJoin = (arr) => {
+    var construct = []
+    for (const i = 0; i < arr.length; i++) construct = construct.concat(arr[i])
+    return construct
+  }
+  
+  formatmoney = (angka) => {
+  let suffixes = [
+    "",
+    " K",
+    " M",
+    " B",
+    " T",
+    " Q"
+  ]
+  let suffixIndex = Math.floor(Math.log10(angka) / 3)
+  let suffix = suffixes[suffixIndex]
+  let scaledmoney = angka / Math.pow(10, suffixIndex * 3)
+  return scaledmoney.toFixed(2) + suffix
+  }
 }
