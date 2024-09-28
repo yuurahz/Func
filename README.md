@@ -1,5 +1,5 @@
 # Functions & Scraper
 
-```
-npm i @yuurahz/func@github:Adixshnzz/Func
+```js
+npm i @yuurahz/func@github:YuuraHz/Func
 ```
