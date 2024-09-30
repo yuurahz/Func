@@ -272,27 +272,32 @@ generateProfilePicture = async (buffer) => {
     * @param {String} type
     * @param {String} text
     */
-   texted = (type, text) => {
-      switch (type) {
-         case 'bold':
-            return '*' + text + '*'
-            break
-         case 'italic':
-            return '_' + text + '_'
-            break
-         case 'monospace':
-            return '```' + text + '```'
-      }
-   }
 
-   /* Example Format
-    * @param {String} isPrefix
-    * @param {String} command
-    * @param {String} args
-    */
-   example = (isPrefix, command, args) => {
-      return `• ${this.texted('bold', 'Example')} : ${isPrefix + command} ${args}`
-   }
+   texted = (type, text) => {
+    switch (type) {
+    case 'dot':
+        return '- ' + text
+        break 
+    case 'gray':
+        return '> ' + text
+        break
+    case 'glow':
+        return '`' + text + '`'
+        break
+      case 'bold':
+        return '*' + text + '*'
+        break
+      case 'italic':
+        return '_' + text + '_'
+        break
+      case 'monospace':
+        return '```' + text + '```'
+    }
+  }
+
+  example = (usedPrefix, command, args) => {
+    return `${this.texted('glow', 'Wrong Input')}\n${this.texted('italic', 'Example')} : ${usedPrefix + command} ${args}`
+  }
 
    /* Fix Instagram URL
     * @param {String} url
