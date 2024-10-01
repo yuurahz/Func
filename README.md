@@ -1,5 +1,5 @@
 # Functions & Scraper
 
-```js
+```bash
 npm i @yuurahz/func@github:YuuraHz/Func
 ```
