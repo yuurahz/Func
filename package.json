@@ -26,7 +26,8 @@
     "path": "^0.12.7",
     "qs": "^6.12.1",
     "request": "^2.88.2",
-    "syntax-error":"^1.4.0"
+    "syntax-error":"^1.4.0",
+    "util": "^0.12.4"
   },
    "author": "YuuraHz",
    "licence": "ISC"
