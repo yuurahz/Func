@@ -1,28 +1,28 @@
-const axios = require('axios')
-const fetch = require('node-fetch')
-const crypto = require('crypto')
-const cheerio = require('cheerio')
-const fs = require('fs')
-const mime = require('mime-types')
-const chalk = require('chalk')
-const path = require('path')
-const FormData = require('form-data')
-const { fromBuffer } = require('file-type')
-const { green, blueBright, redBright } = require('chalk')
-const { tmpdir } = require('os')
-const moment = require('moment-timezone')
-moment.tz.setDefault('Asia/Jakarta')
-const NodeID3 = require('node-id3')
-const {
+const developer = '@yuura/func - YuuraHz',
+  axios = require('axios'),
+  fetch = require('node-fetch'),
+  crypto = require('crypto'),
+  cheerio = require('cheerio'),
+  fs = require('fs'),
+  mime = require('mime-types'),
+  chalk = require('chalk'),
+  path = require('path'),
+  FormData = require('form-data'),
+  { fromBuffer } = require('file-type'),
+  { green, blueBright, redBright } = require('chalk'),
+  { tmpdir } = require('os'),
+  moment = require('moment-timezone'),
+  NodeID3 = require('node-id3'),
+  {
    read,
    MIME_JPEG,
    RESIZE_BILINEAR,
    AUTO
-} = require('jimp')
-
+   } = require('jimp')
+   moment.tz.setDefault('Asia/Jakarta')
+   
 module.exports = class Function {
-
-clockString = (ms) => {
+ clockString = (ms) => {
    let d = isNaN(ms) ? "--" : Math.floor(ms / 86400000);
    let h = isNaN(ms) ? "--" : Math.floor(ms / 3600000) % 24;
    let m = isNaN(ms) ? "--" : Math.floor(ms / 60000) % 60;
@@ -32,7 +32,7 @@ clockString = (ms) => {
     .join("")
   }
 
-generateProfilePicture = async (buffer) => {
+ generateProfilePicture = async (buffer) => {
     const jimp = await Jimp.read(buffer)
     const min = jimp.getWidth()
     const max = jimp.getHeight()
@@ -57,7 +57,7 @@ generateProfilePicture = async (buffer) => {
     throw new Error(`Failed to fetch data: ${error.message}`)
    }
   }
-   
+
   generateRandomString = (length) => {
     const characters = 'abcdef0123456789'
     let result = ''
@@ -122,12 +122,17 @@ generateProfilePicture = async (buffer) => {
   return userAgent
   }
 
-  generateRandomIP = () => {
+ shortlink = async (url) => {
+    let isurl = /https?:\/\//.test(url)
+    return isurl ? (await axios.get('https://tinyurl.com/api-create.php?url=' + encodeURIComponent(url))).data : ''
+ }
+  
+ generateRandomIP = () => {
   const octet = () => Math.floor(Math.random() * 256)
   return `${octet()}.${octet()}.${octet()}.${octet()}`
-  }
+ }
 
-  generateUUIDv4 = () => {
+ generateUUIDv4 = () => {
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
     (c ^ crypto.randomBytes(1)[0] & 15 >> c / 4).toString(16)
    )
@@ -138,13 +143,13 @@ generateProfilePicture = async (buffer) => {
   }
 
   generateMessageID = () => {
-  return Func.randomBytes(10).toString("hex").toUpperCase()
+  return this.randomBytes(10).toString("hex").toUpperCase()
   }
-   
+
   getRandom = (ext) => {
    return `${Math.floor(Math.random() * 10000)}${ext}`
-   }
-    
+  }
+
   ebinary = (binary) => {
     return binary.split(' ')
       .map(bin => String.fromCharCode(parseInt(bin, 2)))
@@ -156,16 +161,14 @@ generateProfilePicture = async (buffer) => {
      .map(char => char.charCodeAt(0).toString(2).padStart(8, '0'))
     .join(' ')
    }
+  
+  reverse = (text) => {
+    return text.split('').reverse().join('')
+  }
+  
+  delay = time => new Promise(res => setTimeout(res, time))
 
-   /* Delay
-    * @param {Integer} time
-    */
-   delay = time => new Promise(res => setTimeout(res, time))
-
-   /* Image Resizer for Thumbnail
-    * @param {String|Buffer} source
-    */
-   createThumb = async (source) => {
+  createThumb = async (source) => {
       let {
          file
       } = await this.getFile(source)
@@ -177,17 +180,10 @@ generateProfilePicture = async (buffer) => {
       return buff
    }
 
-   /* URL Validator
-    * @param {String} url
-    */
    isUrl = (url) => {
       return url.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%.+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%+.~#?&/=]*)/, 'gi'))
    }
 
-   /* Fetching JSON
-    * @param {String} url
-    * @param {Object} head
-    */
    fetchJson = async (url, head = {}) => {
       try {
          const result = await (await fetch(url, {
@@ -196,15 +192,12 @@ generateProfilePicture = async (buffer) => {
          return result
       } catch (e) {
          return ({
+            developer,
             status: false
          })
       }
    }
 
-   /* Converting to Buffer
-    * @param {String|Buffer} file
-    * @param {Object} options
-    */
    fetchBuffer = async (file, options = {}) => {
       return new Promise(async (resolve, reject) => {
          try {
@@ -217,16 +210,13 @@ generateProfilePicture = async (buffer) => {
             }
          } catch {
             return ({
+               developer,
                status: false
             })
          }
       })
    }
 
-   /* Parse Cookie
-    * @param {String} url
-    * @param {Object} options
-    */
    parseCookie = async (file, options = {}) => {
       return new Promise(async (resolve, reject) => {
          try {
@@ -234,16 +224,13 @@ generateProfilePicture = async (buffer) => {
             resolve(cookie)
          } catch {
             return ({
+               developer,
                status: false
             })
          }
       })
    }
 
-   /* Audio Metadata
-    * @param {String|Buffer} source
-    * @param {Object} tags 
-    */
    metaAudio = (source, tags = {}) => {
       return new Promise(async (resolve) => {
          try {
@@ -253,18 +240,22 @@ generateProfilePicture = async (buffer) => {
                mime
             } = await this.getFile(await this.fetchBuffer(source))
             if (!status) return resolve({
+               developer,
                status: false
             })
             if (!/audio/.test(mime)) return resolve({
+               developer,
                status: true,
                file
             })
             NodeID3.write(tags, await this.fetchBuffer(file), function(err, buffer) {
                if (err) return resolve({
+                  developer,
                   status: false
                })
                fs.writeFileSync(file, buffer)
                resolve({
+                  developer,
                   status: true,
                   file
                })
@@ -272,16 +263,12 @@ generateProfilePicture = async (buffer) => {
          } catch (e) {
             console.log(e)
             resolve({
+               developer,
                status: false
             })
          }
       })
    }
-
-   /* Text Style
-    * @param {String} type
-    * @param {String} text
-    */
 
    texted = (type, text) => {
     switch (type) {
@@ -309,30 +296,6 @@ generateProfilePicture = async (buffer) => {
     return `${this.texted('glow', 'Wrong Input')}\n${this.texted('italic', 'Example')} : ${usedPrefix + command} ${args}`
   }
 
-   /* Fix Instagram URL
-    * @param {String} url
-    */
-   igFixed = (url) => {
-      let count = url.split('/')
-      if (count.length == 7) {
-         let username = count[3]
-         let destruct = this.removeItem(count, username)
-         return destruct.map(v => v).join('/')
-      } else return url
-   }
-
-   /* Fix Tiktok URL
-    * @param {String} url
-    */
-   ttFixed = (url) => {
-      if (!url.match(/(tiktok.com\/t\/)/g)) return url
-      let id = url.split('/t/')[1]
-      return 'https://vm.tiktok.com/' + id
-   }
-
-   /* Time Format
-    * @param {Integer} ms
-    */
    toTime = (ms) => {
       let h = Math.floor(ms / 3600000)
       let m = Math.floor(ms / 60000) % 60
@@ -340,14 +303,10 @@ generateProfilePicture = async (buffer) => {
       return [h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
    }
 
-   /* Random Filename
-    * @param {String} extension
-    */
    filename = (extension) => {
       return `${Math.floor(Math.random() * 10000)}.${extension}`
    }
 
-   /* Create UUID */
    uuid = () => {
       var dt = new Date().getTime()
       var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -358,26 +317,16 @@ generateProfilePicture = async (buffer) => {
       return uuid
    }
 
-   /* Random Element From Array
-    * @param {Array} list
-    */
    random = (list) => {
-      return list[Math.floor(Math.random() * list.length)]
-   }
+    return list[Math.floor(Math.random() * list.length)]
+  }
 
-   /* Random Number
-    * @param {Integer} min
-    * @param {Integer} max
-    */
    randomInt = (min, max) => {
       min = Math.ceil(min)
       max = Math.floor(max)
       return Math.floor(Math.random() * (max - min + 1)) + min
    }
 
-   /* Format Number \w Dot
-    * @param {Integer} integer
-    */
    formatter = (integer) => {
       let numb = parseInt(integer)
       return Number(numb).toLocaleString().replace(/,/g, '.')
@@ -388,9 +337,6 @@ generateProfilePicture = async (buffer) => {
       return Number(numb).toLocaleString().replace(/,/g, '.')
    }
 
-   /* H2K Format
-    * @param {Integer} integer
-    */
    h2k = (integer) => {
       let numb = parseInt(integer)
       return new Intl.NumberFormat('en-US', {
@@ -398,9 +344,6 @@ generateProfilePicture = async (buffer) => {
       }).format(numb)
    }
 
-   /* To Readable Size
-    * @param {Integer} size
-    */
    formatSize = (size) => {
       function round(value, precision) {
          var multiplier = Math.pow(10, precision || 0)
@@ -423,20 +366,12 @@ generateProfilePicture = async (buffer) => {
       return ''
    }
 
-   /* Fix Instagram URL
-    * @param {String|Integer} str
-    */
    getSize = async (str) => {
       if (!isNaN(str)) return this.formatSize(str)
       let header = await (await axios.get(str)).headers
       return this.formatSize(header['content-length'])
    }
 
-   /* Download File To /tmp Folder
-    * @param {String|Buffer} source
-    * @param {String} filename
-    * @param {String} referer
-    */
    getFile = (source, filename, options) => {
       return new Promise(async (resolve) => {
          try {
@@ -455,6 +390,7 @@ generateProfilePicture = async (buffer) => {
                let file = fs.writeFileSync(filepath, source)
                let name = filename || path.basename(filepath)
                let data = {
+                  developer,
                   status: true,
                   file: filepath,
                   filename: name,
@@ -477,6 +413,7 @@ generateProfilePicture = async (buffer) => {
                let size = fs.statSync(source).size
                let name = filename || path.basename(source)
                let data = {
+                  developer,
                   status: true,
                   file: source,
                   filename: name,
@@ -497,6 +434,7 @@ generateProfilePicture = async (buffer) => {
                   response.data.pipe(file)
                   file.on('finish', async () => {
                      let data = {
+                        developer,
                         status: true,
                         file: file.path,
                         filename: name,
@@ -513,23 +451,36 @@ generateProfilePicture = async (buffer) => {
          } catch (e) {
             console.log(e)
             resolve({
+               developer,
                status: false
             })
          }
       })
    }
-
-   /* Generate Color
-    * @param {String} text
-    * @param {String} color
-    */
-   color = (text, color) => {
+  
+  getBuffer = async (url, options) => {
+    try {
+      options ? options : {}
+      const res = await axios({
+        method: "get",
+        url,
+        headers: {
+          'DNT': 1,
+          'Upgrade-Insecure-Request': 1
+        },
+        ...options,
+        responseType: 'arraybuffer'
+      })
+      return res.data
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  
+  color = (text, color) => {
       return chalk.keyword(color || 'green').bold(text)
-   }
+  }
 
-   /* Get Message Type
-    * @param {String|Object} data
-    */
    mtype = (data) => {
       function replaceAll(str) {
          let res = str.replace(new RegExp('```', 'g'), '')
@@ -541,10 +492,6 @@ generateProfilePicture = async (buffer) => {
       return type
    }
 
-   /* Size Limitation
-    * @param {String} str
-    * @param {Integer} max
-    */
    sizeLimit = (str, max) => {
       let data
       if (str.match('G') || str.match('GB') || str.match('T') || str.match('TB')) return data = {
@@ -568,29 +515,20 @@ generateProfilePicture = async (buffer) => {
       }
    }
 
-   /* Link Extractor
-    * @param {String} text
-    */
    generateLink = (text) => {
       let regex = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi;
       return text.match(regex)
    }
 
-   /* File Reloader
-    * @param {String} file
-    */
    reload = (file) => {
       fs.watchFile(file, () => {
-         fs.unwatchFile(file)
-         console.log(redBright.bold('[ UPDATE ]'), blueBright(moment(new Date() * 1).format('DD/MM/YY HH:mm:ss')), green.bold('~ ' + path.basename(file)))
-         delete require.cache[file]
-         require(file)
+      fs.unwatchFile(file)
+      console.log(redBright.bold('[ UPDATE ]'), blueBright(moment(new Date() * 1).format('DD/MM/YY HH:mm:ss')), green.bold('~ ' + path.basename(file)))
+       delete require.cache[file]
+       require(file)
       })
    }
 
-   /* Print JSON
-    * @param {Object} obj
-    */
    jsonFormat = (obj) => {
       try {
          let print = (obj && (obj.constructor.name == 'Object' || obj.constructor.name == 'Array')) ? require('util').format(JSON.stringify(obj, null, 2)) : require('util').format(obj)
@@ -600,59 +538,24 @@ generateProfilePicture = async (buffer) => {
       }
    }
 
-   /* Ucword Format
-    * @param {String} str
-    */
    ucword = (str) => {
       return (str + '').replace(/^([a-z])|\s+([a-z])/g, function($1) {
          return $1.toUpperCase();
       })
    }
 
-   /* Next Level Array Concat 
-    * @param {Array} arr
-    */
    arrayJoin = (arr) => {
       var construct = []
       for (var i = 0; i < arr.length; i++) construct = construct.concat(arr[i])
       return construct
    }
 
-   /* Remove Element Form Array
-    * @param {Array} arr
-    * @param {String} value
-    */
    removeItem = (arr, value) => {
       let index = arr.indexOf(value)
       if (index > -1) arr.splice(index, 1)
       return arr
    }
 
-   /* Hitstat
-    * @param {String} cmd
-    * @param {String} who
-    */
-   hitstat = (cmd, who) => {
-      if (/bot|help|menu|stat|hitstat|hitdaily/.test(cmd)) return
-      if (typeof global.db == 'undefined') return
-      if (!global.db.statistic[cmd]) {
-         global.db.statistic[cmd] = {
-            hitstat: 1,
-            today: 1,
-            lasthit: new Date * 1,
-            sender: who.split`@` [0]
-         }
-      } else {
-         global.db.statistic[cmd].hitstat += 1
-         global.db.statistic[cmd].today += 1
-         global.db.statistic[cmd].lasthit = new Date * 1
-         global.db.statistic[cmd].sender = who.split`@` [0]
-      }
-   }
-
-   /* Socmed Link Validator
-    * @param {String} url
-    */
    socmed = (url) => {
       const regex = [
          /^(?:https?:\/\/(web\.|www\.|m\.)?(facebook|fb)\.(com|watch)\S+)?$/,
@@ -669,11 +572,6 @@ generateProfilePicture = async (buffer) => {
       return regex.some(v => url.match(v))
    }
 
-   /* Did You Mean ??
-    * @param {String} string
-    * @param {Array} array
-    * @param {String|Object} options
-    */
    matcher = (string, array, options) => {
       function levenshtein(value, other, insensitive) {
          var cache = []
@@ -686,41 +584,31 @@ generateProfilePicture = async (buffer) => {
          var distanceOther
          var index
          var indexOther
-
          if (value === other) {
             return 0
          }
-
          length = value.length
          lengthOther = other.length
-
          if (length === 0) {
             return lengthOther
          }
-
          if (lengthOther === 0) {
             return length
          }
-
          if (insensitive) {
             value = value.toLowerCase()
             other = other.toLowerCase()
          }
-
          index = 0
-
          while (index < length) {
             codes[index] = value.charCodeAt(index)
             cache[index] = ++index
          }
-
          indexOther = 0
-
          while (indexOther < lengthOther) {
             code = other.charCodeAt(indexOther)
             result = distance = indexOther++
             index = -1
-
             while (++index < length) {
                distanceOther = code === codes[index] ? distance : distance + 1
                distance = cache[index]
@@ -746,7 +634,6 @@ generateProfilePicture = async (buffer) => {
             1 :
             (longest - levenshtein(left, right, insensitive)) / longest) * 100).toFixed(1)
       }
-
       let data = []
       let isArray = array.constructor.name == 'Array' ? array : [array] || []
       isArray.map(v => data.push({
@@ -756,9 +643,6 @@ generateProfilePicture = async (buffer) => {
       return data
    }
 
-   /* Miliseconds to Date
-    * @param {Integer} ms
-    */
    toDate = (ms) => {
       let temp = ms
       let days = Math.floor(ms / (24 * 60 * 60 * 1000));
@@ -769,15 +653,12 @@ generateProfilePicture = async (buffer) => {
       let minutesms = ms % (60 * 1000);
       let sec = Math.floor((minutesms) / (1000));
       if (days == 0 && hours == 0 && minutes == 0) {
-         return "Recently"
+         return 'Recently'
       } else {
          return days + "D " + hours + "H " + minutes + "M";
       }
    }
 
-   /* Time Formater
-    * @param {Integer} value
-    */
    timeFormat = (value) => {
       const sec = parseInt(value, 10)
       let hours = Math.floor(sec / 3600)
@@ -794,9 +675,6 @@ generateProfilePicture = async (buffer) => {
       return (status) ? this.texted('bold', isTrue) : this.texted('bold', isFalse)
    }
 
-   /* Random ID
-    * @param {Integer} length
-    */
    makeId = (length) => {
       var result = ''
       var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
@@ -807,9 +685,6 @@ generateProfilePicture = async (buffer) => {
       return result
    }
 
-   /* Timeout
-    * @param {Integer} ms
-    */
    timeReverse = (duration) => {
       let milliseconds = parseInt((duration % 1000) / 100),
          seconds = Math.floor((duration / 1000) % 60),
@@ -820,13 +695,9 @@ generateProfilePicture = async (buffer) => {
       let minutesF = (minutes < 10) ? "0" + minutes : minutes
       let secondsF = (seconds < 10) ? "0" + seconds : seconds
       let daysF = (days < 10) ? "0" + days : days
-      // return hours + " Jam " + minutes + " Menit" + seconds + " Detik" + milliseconds;
       return daysF + "D " + hoursF + "H " + minutesF + "M"
    }
 
-   /* Timeout
-    * @param ()
-    */
    greeting = () => {
       let time = moment.tz(global.timezone).format('HH')
       let res = `Don't forget to sleep`
@@ -837,18 +708,11 @@ generateProfilePicture = async (buffer) => {
       return res
    }
 
-   /* Random JSON From File
-    * @param ()
-    */
    jsonRandom = (file) => {
       let json = JSON.parse(fs.readFileSync(file))
       return json[Math.floor(Math.random() * json.length)]
    }
 
-   /* Leveling
-    * @param {Integer} xp
-    * @param {Integer} multiplier
-    */
    level = (xp, multiplier = 5) => {
       var XPAsli = xp
       var level = 1
@@ -870,9 +734,6 @@ generateProfilePicture = async (buffer) => {
       return [level, XPLevel, sisaXP, kurang]
    }
 
-   /* Roles
-    * @param {Integer} level
-    */
    role = (level) => {
       let roles = '-'
       if (level <= 2) {
@@ -1165,9 +1026,6 @@ generateProfilePicture = async (buffer) => {
       return roles
    }
 
-   /* Text Cutter
-    * @param {String} text
-    */
    filter = (text) => {
       if (text.length > 10) {
          return text.substr(text.length - 5)
@@ -1182,9 +1040,6 @@ generateProfilePicture = async (buffer) => {
       }
    }
 
-   /* Random String
-    * @param {String} text
-    */
    randomString = (len, charSet) => {
       charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789/+=*-%$();?!#@';
       var randomString = '';
@@ -1195,20 +1050,12 @@ generateProfilePicture = async (buffer) => {
       return randomString
    }
 
-   /* Remove Emoji
-    * @param {String} string
-    */
    removeEmojis = (string) => {
       var regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g;
       return string.replace(regex, '')
    }
 
-   /* Image Resizer
-    * @param {Buffer} buffer
-    * @param {Integer} x
-    * @param {Integer} y
-    */
-   reSize = async (buffer, x, z) => {
+  reSize = async (buffer, x, z) => {
       return new Promise(async (resolve, reject) => {
          var buff = await read(buffer)
          var ab = await buff.resize(x, z).getBufferAsync(MIME_JPEG)
@@ -1267,7 +1114,7 @@ generateProfilePicture = async (buffer) => {
     for (const i = 0; i < arr.length; i++) construct = construct.concat(arr[i])
     return construct
   }
-  
+
   formatmoney = (angka) => {
   let suffixes = [
     "",
