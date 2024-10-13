@@ -1,4 +1,4 @@
-const developer = '@yuura/func - YuuraHz',
+  const developer = '@yuurahz/func',
   axios = require('axios'),
   fetch = require('node-fetch'),
   crypto = require('crypto'),
