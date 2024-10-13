@@ -22,6 +22,12 @@ const developer = '@yuura/func - YuuraHz',
    moment.tz.setDefault('Asia/Jakarta')
    
 module.exports = class Function {
+
+readMore = () => {
+   let More = String.fromCharCode(8206).repeat(4001)
+   return More
+}
+
  clockString = (ms) => {
    let d = isNaN(ms) ? "--" : Math.floor(ms / 86400000);
    let h = isNaN(ms) ? "--" : Math.floor(ms / 3600000) % 24;
@@ -43,9 +49,9 @@ module.exports = class Function {
     }
   }
 
-  generateSerpApiUrl = (data) => {
-  const params = new URLSearchParams(data)
-  const url = `https://serpapi.com/search.json?${params.toString()}`
+generateSerpApiUrl = (data) => {
+   const params = new URLSearchParams(data)
+   const url = `https://serpapi.com/search.json?${params.toString()}`
   try {
     const response = fetch(url)
     if (!response.ok) {
