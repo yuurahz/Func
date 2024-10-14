@@ -23,10 +23,10 @@
    
 module.exports = class Function {
 
-readMore = () => {
+ readMore = () => {
    let More = String.fromCharCode(8206).repeat(4001)
    return More
-}
+ }
 
  clockString = (ms) => {
    let d = isNaN(ms) ? "--" : Math.floor(ms / 86400000);
@@ -39,20 +39,20 @@ readMore = () => {
   }
 
  generateProfilePicture = async (buffer) => {
-    const jimp = await Jimp.read(buffer)
+    const jimp = await read(buffer)
     const min = jimp.getWidth()
     const max = jimp.getHeight()
     const cropped = jimp.crop(0, 0, min, max)
     return {
-      img: await cropped.scaleToFit(720, 720).getBufferAsync(Jimp.MIME_JPEG),
-      preview: await cropped.scaleToFit(720, 720).getBufferAsync(Jimp.MIME_JPEG),
+      img: await cropped.scaleToFit(720, 720).getBufferAsync(MIME_JPEG),
+      preview: await cropped.scaleToFit(720, 720).getBufferAsync(MIME_JPEG),
     }
-  }
+ }
 
-generateSerpApiUrl = (data) => {
-   const params = new URLSearchParams(data)
-   const url = `https://serpapi.com/search.json?${params.toString()}`
-  try {
+ generateSerpApiUrl = (data) => {
+    const params = new URLSearchParams(data)
+    const url = `https://serpapi.com/search.json?${params.toString()}`
+ try {
     const response = fetch(url)
     if (!response.ok) {
       throw new Error("Request failed")
@@ -62,27 +62,35 @@ generateSerpApiUrl = (data) => {
    } catch (error) {
     throw new Error(`Failed to fetch data: ${error.message}`)
    }
-  }
+ }
 
-  generateRandomString = (length) => {
+ listAdmin = (participants) => {
+    let admins = []
+    for (let i of participants) {
+        i.admin === 'superadmin' ? admins.push(i.id) : i.admin === 'admin' ? admins.push(i.id) : ''
+    }
+    return admins || []
+ }
+ 
+ generateRandomString = (length) => {
     const characters = 'abcdef0123456789'
     let result = ''
     for (let i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * characters.length))
     }
     return result
-    }
+ }
 
-  generateRandomNumberString = (length) => {
+ generateRandomNumberString = (length) => {
     const characters = '0123456789';
     let result = ''
     for (let i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * characters.length))
     }
     return result
-  }
+ }
 
-  generateRandomUserAgent = () => {
+ generateRandomUserAgent = () => {
   const androidVersions = [
     "4.0.3",
     "4.1.1",
@@ -144,7 +152,7 @@ generateSerpApiUrl = (data) => {
    )
   }
 
-  randomBytes = (length) => {
+ randomBytes = (length) => {
   return crypto.randomBytes(length)
   }
 
@@ -186,11 +194,11 @@ generateSerpApiUrl = (data) => {
       return buff
    }
 
-   isUrl = (url) => {
+  isUrl = (url) => {
       return url.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%.+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%+.~#?&/=]*)/, 'gi'))
    }
 
-   fetchJson = async (url, head = {}) => {
+  fetchJson = async (url, head = {}) => {
       try {
          const result = await (await fetch(url, {
             headers: head
@@ -204,11 +212,11 @@ generateSerpApiUrl = (data) => {
       }
    }
 
-   fetchBuffer = async (file, options = {}) => {
+  fetchBuffer = async (file, options = {}) => {
       return new Promise(async (resolve, reject) => {
          try {
             if (this.isUrl(file)) {
-               let buff = await (await axios.get(file, { responseType: "arraybuffer", headers: options })).data
+               let buff = await (await axios.get(file, { responseType: 'arraybuffer', headers: options })).data
                resolve(buff)
             } else {
                let buff = fs.readFileSync(file)
@@ -221,9 +229,27 @@ generateSerpApiUrl = (data) => {
             })
          }
       })
-   }
-
-   parseCookie = async (file, options = {}) => {
+  }
+  
+  fetchText = async (url, options = {}) => {
+    try {
+      let data = await axios.get(url, {
+        headers: {
+          ...(!!options.headers ? options.headers : {}),
+        },
+        responseType: "text",
+        ...options,
+      })
+      return await data?.data
+    } catch (e) {
+      return ({
+        developer,
+        status: false
+      })
+    }
+  }
+  
+  parseCookie = async (file, options = {}) => {
       return new Promise(async (resolve, reject) => {
          try {
             let cookie = await (await axios.get(file, { responseType: "arraybuffer", headers: options })).headers['set-cookie']
@@ -235,9 +261,9 @@ generateSerpApiUrl = (data) => {
             })
          }
       })
-   }
+  }
 
-   metaAudio = (source, tags = {}) => {
+  metaAudio = (source, tags = {}) => {
       return new Promise(async (resolve) => {
          try {
             let {
@@ -274,9 +300,9 @@ generateSerpApiUrl = (data) => {
             })
          }
       })
-   }
+  }
 
-   texted = (type, text) => {
+  texted = (type, text) => {
     switch (type) {
     case 'dot':
         return '- ' + text
@@ -302,55 +328,55 @@ generateSerpApiUrl = (data) => {
     return `${this.texted('glow', 'Wrong Input')}\n${this.texted('italic', 'Example')} : ${usedPrefix + command} ${args}`
   }
 
-   toTime = (ms) => {
+  toTime = (ms) => {
       let h = Math.floor(ms / 3600000)
       let m = Math.floor(ms / 60000) % 60
       let s = Math.floor(ms / 1000) % 60
       return [h, m, s].map(v => v.toString().padStart(2, 0)).join(':')
    }
 
-   filename = (extension) => {
+  filename = (extension) => {
       return `${Math.floor(Math.random() * 10000)}.${extension}`
-   }
+  }
 
-   uuid = () => {
-      var dt = new Date().getTime()
-      var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-         var r = (dt + Math.random() * 16) % 16 | 0;
-         var y = Math.floor(dt / 16);
-         return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-      });
+  uuid = () => {
+      let dt = new Date().getTime()
+      let uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+         let r = (dt + Math.random() * 16) % 16 | 0
+         let y = Math.floor(dt / 16)
+         return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16)
+      })
       return uuid
-   }
+  }
 
-   random = (list) => {
+  random = (list) => {
     return list[Math.floor(Math.random() * list.length)]
   }
 
-   randomInt = (min, max) => {
+  randomInt = (min, max) => {
       min = Math.ceil(min)
       max = Math.floor(max)
       return Math.floor(Math.random() * (max - min + 1)) + min
-   }
+  }
 
-   formatter = (integer) => {
+  formatter = (integer) => {
       let numb = parseInt(integer)
       return Number(numb).toLocaleString().replace(/,/g, '.')
-   }
+  }
 
-   formatNumber = (integer) => {
+  formatNumber = (integer) => {
       let numb = parseInt(integer)
       return Number(numb).toLocaleString().replace(/,/g, '.')
-   }
+  }
 
-   h2k = (integer) => {
+  h2k = (integer) => {
       let numb = parseInt(integer)
       return new Intl.NumberFormat('en-US', {
          notation: 'compact'
       }).format(numb)
-   }
+  }
 
-   formatSize = (size) => {
+  formatSize = (size) => {
       function round(value, precision) {
          var multiplier = Math.pow(10, precision || 0)
          return Math.round(value * multiplier) / multiplier
@@ -370,15 +396,15 @@ generateSerpApiUrl = (data) => {
          return round(size / teraByte, 1) + ' TB'
       }
       return ''
-   }
+  }
 
-   getSize = async (str) => {
+  getSize = async (str) => {
       if (!isNaN(str)) return this.formatSize(str)
       let header = await (await axios.get(str)).headers
       return this.formatSize(header['content-length'])
-   }
+  }
 
-   getFile = (source, filename, options) => {
+  getFile = (source, filename, options) => {
       return new Promise(async (resolve) => {
          try {
             if (Buffer.isBuffer(source)) {
@@ -462,7 +488,7 @@ generateSerpApiUrl = (data) => {
             })
          }
       })
-   }
+  }
   
   getBuffer = async (url, options) => {
     try {
@@ -521,48 +547,48 @@ generateSerpApiUrl = (data) => {
       }
    }
 
-   generateLink = (text) => {
+  generateLink = (text) => {
       let regex = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi;
       return text.match(regex)
-   }
+  }
 
-   reload = (file) => {
+  reload = (file) => {
       fs.watchFile(file, () => {
       fs.unwatchFile(file)
       console.log(redBright.bold('[ UPDATE ]'), blueBright(moment(new Date() * 1).format('DD/MM/YY HH:mm:ss')), green.bold('~ ' + path.basename(file)))
        delete require.cache[file]
        require(file)
-      })
-   }
+    })
+  }
 
-   jsonFormat = (obj) => {
+  jsonFormat = (obj) => {
       try {
          let print = (obj && (obj.constructor.name == 'Object' || obj.constructor.name == 'Array')) ? require('util').format(JSON.stringify(obj, null, 2)) : require('util').format(obj)
          return print
       } catch {
          return require('util').format(obj)
       }
-   }
+  }
 
-   ucword = (str) => {
+  ucword = (str) => {
       return (str + '').replace(/^([a-z])|\s+([a-z])/g, function($1) {
          return $1.toUpperCase();
       })
-   }
+  }
 
-   arrayJoin = (arr) => {
+  arrayJoin = (arr) => {
       var construct = []
       for (var i = 0; i < arr.length; i++) construct = construct.concat(arr[i])
       return construct
-   }
+  }
 
-   removeItem = (arr, value) => {
+  removeItem = (arr, value) => {
       let index = arr.indexOf(value)
       if (index > -1) arr.splice(index, 1)
       return arr
-   }
+  }
 
-   socmed = (url) => {
+  socmed = (url) => {
       const regex = [
          /^(?:https?:\/\/(web\.|www\.|m\.)?(facebook|fb)\.(com|watch)\S+)?$/,
          /^(?:https?:\/\/)?(?:www\.)?(?:instagram\.com\/)(?:tv\/|p\/|reel\/)(?:\S+)?$/,
@@ -576,9 +602,9 @@ generateSerpApiUrl = (data) => {
          /^(?:https?:\/\/)?(?:podcasts\.)?(?:google\.com\/)(?:feed\/)(?:\S+)?$/
       ]
       return regex.some(v => url.match(v))
-   }
+  }
 
-   matcher = (string, array, options) => {
+  matcher = (string, array, options) => {
       function levenshtein(value, other, insensitive) {
          var cache = []
          var codes = []
@@ -628,10 +654,10 @@ generateSerpApiUrl = (data) => {
                   distanceOther
             }
          }
-         return result
-      }
+      return result
+  }
 
-      function similarity(a, b, options) {
+  function similarity(a, b, options) {
          var left = a || ''
          var right = b || ''
          var insensitive = !(options || {}).sensitive
@@ -647,9 +673,9 @@ generateSerpApiUrl = (data) => {
          accuracy: similarity(string, v)
       }))
       return data
-   }
+  }
 
-   toDate = (ms) => {
+  toDate = (ms) => {
       let temp = ms
       let days = Math.floor(ms / (24 * 60 * 60 * 1000));
       let daysms = ms % (24 * 60 * 60 * 1000);
@@ -663,9 +689,9 @@ generateSerpApiUrl = (data) => {
       } else {
          return days + "D " + hours + "H " + minutes + "M";
       }
-   }
+  }
 
-   timeFormat = (value) => {
+  timeFormat = (value) => {
       const sec = parseInt(value, 10)
       let hours = Math.floor(sec / 3600)
       let minutes = Math.floor((sec - (hours * 3600)) / 60)
@@ -675,13 +701,13 @@ generateSerpApiUrl = (data) => {
       if (seconds < 10) seconds = '0' + seconds
       if (hours == parseInt('00')) return minutes + ':' + seconds
       return hours + ':' + minutes + ':' + seconds
-   }
+  }
 
-   switcher = (status, isTrue, isFalse) => {
+  switcher = (status, isTrue, isFalse) => {
       return (status) ? this.texted('bold', isTrue) : this.texted('bold', isFalse)
-   }
+  }
 
-   makeId = (length) => {
+  makeId = (length) => {
       var result = ''
       var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
       var charactersLength = characters.length
@@ -689,9 +715,9 @@ generateSerpApiUrl = (data) => {
          result += characters.charAt(Math.floor(Math.random() * charactersLength))
       }
       return result
-   }
+  }
 
-   timeReverse = (duration) => {
+  timeReverse = (duration) => {
       let milliseconds = parseInt((duration % 1000) / 100),
          seconds = Math.floor((duration / 1000) % 60),
          minutes = Math.floor((duration / (1000 * 60)) % 60),
@@ -702,24 +728,24 @@ generateSerpApiUrl = (data) => {
       let secondsF = (seconds < 10) ? "0" + seconds : seconds
       let daysF = (days < 10) ? "0" + days : days
       return daysF + "D " + hoursF + "H " + minutesF + "M"
-   }
+  }
 
-   greeting = () => {
-      let time = moment.tz(global.timezone).format('HH')
+  ucapan = () => {
+      let time = moment.tz('Asia/Jakarta').format('HH')
       let res = `Don't forget to sleep`
       if (time >= 3) res = `Good Evening`
       if (time > 6) res = `Good Morning`
       if (time >= 11) res = `Good Afternoon`
       if (time >= 18) res = `Good Night`
       return res
-   }
+  }
 
-   jsonRandom = (file) => {
+  jsonRandom = (file) => {
       let json = JSON.parse(fs.readFileSync(file))
       return json[Math.floor(Math.random() * json.length)]
-   }
+  }
 
-   level = (xp, multiplier = 5) => {
+  level = (xp, multiplier = 5) => {
       var XPAsli = xp
       var level = 1
       while (xp > 1) {
@@ -738,301 +764,9 @@ generateSerpApiUrl = (data) => {
       if (sisaXP == 0) sisaXP = XPLevel + XPLevel
       let kurang = XPLevel - sisaXP
       return [level, XPLevel, sisaXP, kurang]
-   }
+  }
 
-   role = (level) => {
-      let roles = '-'
-      if (level <= 2) {
-         roles = 'Newbie ㋡'
-      } else if (level <= 4) {
-         roles = 'Beginner Grade 1 ⚊¹'
-      } else if (level <= 6) {
-         roles = 'Beginner Grade 2 ⚊²'
-      } else if (level <= 8) {
-         roles = 'Beginner Grade 3 ⚊³'
-      } else if (level <= 10) {
-         roles = 'Beginner Grade 4 ⚊⁴'
-      } else if (level <= 12) {
-         roles = 'Private Grade 1 ⚌¹'
-      } else if (level <= 14) {
-         roles = 'Private Grade 2 ⚌²'
-      } else if (level <= 16) {
-         roles = 'Private Grade 3 ⚌³'
-      } else if (level <= 18) {
-         roles = 'Private Grade 4 ⚌⁴'
-      } else if (level <= 20) {
-         roles = 'Private Grade 5 ⚌⁵'
-      } else if (level <= 22) {
-         roles = 'Corporal Grade 1 ☰¹'
-      } else if (level <= 24) {
-         roles = 'Corporal Grade 2 ☰²'
-      } else if (level <= 26) {
-         roles = 'Corporal Grade 3 ☰³'
-      } else if (level <= 28) {
-         roles = 'Corporal Grade 4 ☰⁴'
-      } else if (level <= 30) {
-         roles = 'Corporal Grade 5 ☰⁵'
-      } else if (level <= 32) {
-         roles = 'Sergeant Grade 1 ≣¹'
-      } else if (level <= 34) {
-         roles = 'Sergeant Grade 2 ≣²'
-      } else if (level <= 36) {
-         roles = 'Sergeant Grade 3 ≣³'
-      } else if (level <= 38) {
-         roles = 'Sergeant Grade 4 ≣⁴'
-      } else if (level <= 40) {
-         roles = 'Sergeant Grade 5 ≣⁵'
-      } else if (level <= 42) {
-         roles = 'Staff Grade 1 ﹀¹'
-      } else if (level <= 44) {
-         roles = 'Staff Grade 2 ﹀²'
-      } else if (level <= 46) {
-         roles = 'Staff Grade 3 ﹀³'
-      } else if (level <= 48) {
-         roles = 'Staff Grade 4 ﹀⁴'
-      } else if (level <= 50) {
-         roles = 'Staff Grade 5 ﹀⁵'
-      } else if (level <= 52) {
-         roles = 'Sergeant Grade 1 ︾¹'
-      } else if (level <= 54) {
-         roles = 'Sergeant Grade 2 ︾²'
-      } else if (level <= 56) {
-         roles = 'Sergeant Grade 3 ︾³'
-      } else if (level <= 58) {
-         roles = 'Sergeant Grade 4 ︾⁴'
-      } else if (level <= 60) {
-         roles = 'Sergeant Grade 5 ︾⁵'
-      } else if (level <= 62) {
-         roles = '2nd Lt. Grade 1 ♢¹ '
-      } else if (level <= 64) {
-         roles = '2nd Lt. Grade 2 ♢²'
-      } else if (level <= 66) {
-         roles = '2nd Lt. Grade 3 ♢³'
-      } else if (level <= 68) {
-         roles = '2nd Lt. Grade 4 ♢⁴'
-      } else if (level <= 70) {
-         roles = '2nd Lt. Grade 5 ♢⁵'
-      } else if (level <= 72) {
-         roles = '1st Lt. Grade 1 ♢♢¹'
-      } else if (level <= 74) {
-         roles = '1st Lt. Grade 2 ♢♢²'
-      } else if (level <= 76) {
-         roles = '1st Lt. Grade 3 ♢♢³'
-      } else if (level <= 78) {
-         roles = '1st Lt. Grade 4 ♢♢⁴'
-      } else if (level <= 80) {
-         roles = '1st Lt. Grade 5 ♢♢⁵'
-      } else if (level <= 82) {
-         roles = 'Major Grade 1 ✷¹'
-      } else if (level <= 84) {
-         roles = 'Major Grade 2 ✷²'
-      } else if (level <= 86) {
-         roles = 'Major Grade 3 ✷³'
-      } else if (level <= 88) {
-         roles = 'Major Grade 4 ✷⁴'
-      } else if (level <= 90) {
-         roles = 'Major Grade 5 ✷⁵'
-      } else if (level <= 92) {
-         roles = 'Colonel Grade 1 ✷✷¹'
-      } else if (level <= 94) {
-         roles = 'Colonel Grade 2 ✷✷²'
-      } else if (level <= 96) {
-         roles = 'Colonel Grade 3 ✷✷³'
-      } else if (level <= 98) {
-         roles = 'Colonel Grade 4 ✷✷⁴'
-      } else if (level <= 100) {
-         roles = 'Colonel Grade 5 ✷✷⁵'
-      } else if (level <= 102) {
-         roles = 'Brigadier Early ✰'
-      } else if (level <= 104) {
-         roles = 'Brigadier Silver ✩'
-      } else if (level <= 106) {
-         roles = 'Brigadier gold ✯'
-      } else if (level <= 108) {
-         roles = 'Brigadier Platinum ✬'
-      } else if (level <= 110) {
-         roles = 'Brigadier Diamond ✪'
-      } else if (level <= 112) {
-         roles = 'Major General Early ✰'
-      } else if (level <= 114) {
-         roles = 'Major General Silver ✩'
-      } else if (level <= 116) {
-         roles = 'Major General gold ✯'
-      } else if (level <= 118) {
-         roles = 'Major General Platinum ✬'
-      } else if (level <= 120) {
-         roles = 'Major General Diamond ✪'
-      } else if (level <= 122) {
-         roles = 'Lt. General Early ✰'
-      } else if (level <= 124) {
-         roles = 'Lt. General Silver ✩'
-      } else if (level <= 126) {
-         roles = 'Lt. General gold ✯'
-      } else if (level <= 128) {
-         roles = 'Lt. General Platinum ✬'
-      } else if (level <= 130) {
-         roles = 'Lt. General Diamond ✪'
-      } else if (level <= 132) {
-         roles = 'General Early ✰'
-      } else if (level <= 134) {
-         roles = 'General Silver ✩'
-      } else if (level <= 136) {
-         roles = 'General gold ✯'
-      } else if (level <= 138) {
-         roles = 'General Platinum ✬'
-      } else if (level <= 140) {
-         roles = 'General Diamond ✪'
-      } else if (level <= 142) {
-         roles = 'Commander Early ★'
-      } else if (level <= 144) {
-         roles = 'Commander Intermediate ⍣'
-      } else if (level <= 146) {
-         roles = 'Commander Elite ≛'
-      } else if (level <= 148) {
-         roles = 'The Commander Hero ⍟'
-      } else if (level <= 152) {
-         roles = 'Legends 忍'
-      } else if (level <= 154) {
-         roles = 'Legends 忍'
-      } else if (level <= 156) {
-         roles = 'Legends 忍'
-      } else if (level <= 158) {
-         roles = 'Legends 忍'
-      } else if (level <= 160) {
-         roles = 'Legends 忍'
-      } else if (level <= 162) {
-         roles = 'Legends 忍'
-      } else if (level <= 164) {
-         roles = 'Legends 忍'
-      } else if (level <= 166) {
-         roles = 'Legends 忍'
-      } else if (level <= 168) {
-         roles = 'Legends 忍'
-      } else if (level <= 170) {
-         roles = 'Legends 忍'
-      } else if (level <= 172) {
-         roles = 'Legends 忍'
-      } else if (level <= 174) {
-         roles = 'Legends 忍'
-      } else if (level <= 176) {
-         roles = 'Legends 忍'
-      } else if (level <= 178) {
-         roles = 'Legends 忍'
-      } else if (level <= 180) {
-         roles = 'Legends 忍'
-      } else if (level <= 182) {
-         roles = 'Legends 忍'
-      } else if (level <= 184) {
-         roles = 'Legends 忍'
-      } else if (level <= 186) {
-         roles = 'Legends 忍'
-      } else if (level <= 188) {
-         roles = 'Legends 忍'
-      } else if (level <= 190) {
-         roles = 'Legends 忍'
-      } else if (level <= 192) {
-         roles = 'Legends 忍'
-      } else if (level <= 194) {
-         roles = 'Legends 忍'
-      } else if (level <= 196) {
-         roles = 'Legends 忍'
-      } else if (level <= 198) {
-         roles = 'Legends 忍'
-      } else if (level <= 200) {
-         roles = 'Legends 忍'
-      } else if (level <= 210) {
-         roles = 'Legends 忍'
-      } else if (level <= 220) {
-         roles = 'Legends 忍'
-      } else if (level <= 230) {
-         roles = 'Legends 忍'
-      } else if (level <= 240) {
-         roles = 'Legends 忍'
-      } else if (level <= 250) {
-         roles = 'Legends 忍'
-      } else if (level <= 260) {
-         roles = 'Legends 忍'
-      } else if (level <= 270) {
-         roles = 'Legends 忍'
-      } else if (level <= 280) {
-         roles = 'Legends 忍'
-      } else if (level <= 290) {
-         roles = 'Legends 忍'
-      } else if (level <= 300) {
-         roles = 'Legends 忍'
-      } else if (level <= 310) {
-         roles = 'Legends 忍'
-      } else if (level <= 320) {
-         roles = 'Legends 忍'
-      } else if (level <= 330) {
-         roles = 'Legends 忍'
-      } else if (level <= 340) {
-         roles = 'Legends 忍'
-      } else if (level <= 350) {
-         roles = 'Legends 忍'
-      } else if (level <= 360) {
-         roles = 'Legends 忍'
-      } else if (level <= 370) {
-         roles = 'Legends 忍'
-      } else if (level <= 380) {
-         roles = 'Legends 忍'
-      } else if (level <= 390) {
-         roles = 'Legends 忍'
-      } else if (level <= 400) {
-         roles = 'Legends 忍'
-      } else if (level <= 410) {
-         roles = 'Legends 忍'
-      } else if (level <= 420) {
-         roles = 'Legends 忍'
-      } else if (level <= 430) {
-         roles = 'Legends 忍'
-      } else if (level <= 440) {
-         roles = 'Legends 忍'
-      } else if (level <= 450) {
-         roles = 'Legends 忍'
-      } else if (level <= 460) {
-         roles = 'Legends 忍'
-      } else if (level <= 470) {
-         roles = 'Legends 忍'
-      } else if (level <= 480) {
-         roles = 'Legends 忍'
-      } else if (level <= 490) {
-         roles = 'Legends 忍'
-      } else if (level <= 500) {
-         roles = 'Legends 忍'
-      } else if (level <= 600) {
-         roles = 'Legends 忍'
-      } else if (level <= 700) {
-         roles = 'Legends 忍'
-      } else if (level <= 800) {
-         roles = 'Legends 忍'
-      } else if (level <= 900) {
-         roles = 'Legends 忍'
-      } else if (level <= 1000) {
-         roles = 'Legends 忍'
-      } else if (level <= 2000) {
-         roles = 'Legends 忍'
-      } else if (level <= 3000) {
-         roles = 'Legends 忍'
-      } else if (level <= 4000) {
-         roles = 'Legends 忍'
-      } else if (level <= 5000) {
-         roles = 'Legends 忍'
-      } else if (level <= 6000) {
-         roles = 'Legends 忍'
-      } else if (level <= 7000) {
-         roles = 'Legends 忍'
-      } else if (level <= 8000) {
-         roles = 'Legends 忍'
-      } else if (level <= 9000) {
-         roles = 'Legends 忍'
-      } else if (level <= 10000) {
-         roles = 'Legends 忍'
-      }
-      return roles
-   }
-
-   filter = (text) => {
+  filter = (text) => {
       if (text.length > 10) {
          return text.substr(text.length - 5)
       } else if (text.length > 7) {
@@ -1044,22 +778,22 @@ generateSerpApiUrl = (data) => {
       } else if (text.length > 1) {
          return text.substr(text.length - 1)
       }
-   }
+  }
 
-   randomString = (len, charSet) => {
-      charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789/+=*-%$();?!#@';
-      var randomString = '';
+  randomString = (len, charSet) => {
+      charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789/+=*-%$();?!#@'
+      var randomString = ''
       for (var i = 0; i < len; i++) {
-         var randomPoz = Math.floor(Math.random() * charSet.length);
-         randomString += charSet.substring(randomPoz, randomPoz + 1);
+         var randomPoz = Math.floor(Math.random() * charSet.length)
+         randomString += charSet.substring(randomPoz, randomPoz + 1)
       }
       return randomString
-   }
+  }
 
-   removeEmojis = (string) => {
+  removeEmojis = (string) => {
       var regex = /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g;
       return string.replace(regex, '')
-   }
+  }
 
   reSize = async (buffer, x, z) => {
       return new Promise(async (resolve, reject) => {
@@ -1122,17 +856,17 @@ generateSerpApiUrl = (data) => {
   }
 
   formatmoney = (angka) => {
-  let suffixes = [
+    let suffixes = [
     "",
     " K",
     " M",
     " B",
     " T",
     " Q"
-  ]
-  let suffixIndex = Math.floor(Math.log10(angka) / 3)
-  let suffix = suffixes[suffixIndex]
-  let scaledmoney = angka / Math.pow(10, suffixIndex * 3)
-  return scaledmoney.toFixed(2) + suffix
+    ]
+    let suffixIndex = Math.floor(Math.log10(angka) / 3)
+    let suffix = suffixes[suffixIndex]
+    let scaledmoney = angka / Math.pow(10, suffixIndex * 3)
+    return scaledmoney.toFixed(2) + suffix
+    }
   }
-}

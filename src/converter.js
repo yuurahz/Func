@@ -3,6 +3,7 @@ const path = require('path')
 const { spawn } = require('child_process')
 
 module.exports = class Converter {
+
    ffmpeg = (buffer, args = [], ext = '', ext2 = '') => {
       return new Promise(async (resolve, reject) => {
          try {
