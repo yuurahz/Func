@@ -30,7 +30,7 @@
     "util": "^0.12.4"
   },
   "author": "YuuraHz",
-  "licence": "ISC",
+  "licence": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yuurahz/Func.git"
