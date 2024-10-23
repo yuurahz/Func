@@ -168,13 +168,13 @@ module.exports = class Function {
     return binary.split(' ')
       .map(bin => String.fromCharCode(parseInt(bin, 2)))
      .join('')
-    }
+  }
 
   binary = (text) => {
     return text.split('')
      .map(char => char.charCodeAt(0).toString(2).padStart(8, '0'))
     .join(' ')
-   }
+  }
   
   reverse = (text) => {
     return text.split('').reverse().join('')
@@ -192,11 +192,11 @@ module.exports = class Function {
          .resize(200, AUTO, RESIZE_BILINEAR)
          .getBufferAsync(MIME_JPEG)
       return buff
-   }
+  }
 
   isUrl = (url) => {
       return url.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%.+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%+.~#?&/=]*)/, 'gi'))
-   }
+  }
 
   fetchJson = async (url, head = {}) => {
       try {
@@ -210,7 +210,7 @@ module.exports = class Function {
             status: false
          })
       }
-   }
+  }
 
   fetchBuffer = async (file, options = {}) => {
       return new Promise(async (resolve, reject) => {
@@ -418,7 +418,7 @@ module.exports = class Function {
                }
                let extension = filename ? filename.split`.` [filename.split`.`.length - 1] : ext
                let size = Buffer.byteLength(source)
-               let filepath = 'temp/' + (this.uuid() + '.' + ext)
+               let filepath = 'tmp/' + (this.uuid() + '.' + ext)
                let file = fs.writeFileSync(filepath, source)
                let name = filename || path.basename(filepath)
                let data = {
@@ -461,7 +461,7 @@ module.exports = class Function {
                   ...options
                }).then(async (response) => {
                   let extension = filename ? filename.split`.` [filename.split`.`.length - 1] : mime.extension(response.headers['content-type'])
-                  let file = fs.createWriteStream(`temp/${this.uuid() + '.' + extension}`)
+                  let file = fs.createWriteStream(`tmp/${this.uuid() + '.' + extension}`)
                   let name = filename || path.basename(file.path)
                   response.data.pipe(file)
                   file.on('finish', async () => {
@@ -513,7 +513,7 @@ module.exports = class Function {
       return chalk.keyword(color || 'green').bold(text)
   }
 
-   mtype = (data) => {
+  mtype = (data) => {
       function replaceAll(str) {
          let res = str.replace(new RegExp('```', 'g'), '')
             .replace(new RegExp('_', 'g'), '')
@@ -522,9 +522,9 @@ module.exports = class Function {
       }
       let type = (typeof data.text !== 'object') ? replaceAll(data.text) : ''
       return type
-   }
+  }
 
-   sizeLimit = (str, max) => {
+  sizeLimit = (str, max) => {
       let data
       if (str.match('G') || str.match('GB') || str.match('T') || str.match('TB')) return data = {
          oversize: true
@@ -545,7 +545,7 @@ module.exports = class Function {
             oversize: false
          }
       }
-   }
+  }
 
   generateLink = (text) => {
       let regex = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})/gi;
@@ -801,7 +801,7 @@ module.exports = class Function {
          var ab = await buff.resize(x, z).getBufferAsync(MIME_JPEG)
          resolve(ab)
       })
-   }
+  }
 
   removeItem = (arr, value) => {
     let index = arr.indexOf(value)
